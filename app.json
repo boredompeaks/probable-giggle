@@ -1,0 +1,58 @@
+{
+  "expo": {
+    "name": "V5 Chat Vault",
+    "slug": "v5-chat-vault",
+    "projectId": "a302e6c7-9320-4966-ab5b-110c210c81d2", 
+    "version": "5.0.0",
+    "orientation": "auto",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.CAMERA"
+      ],
+      "package": "com.vault.chat.v5",
+      "versionCode": 5,
+      "notification": {
+        "icon": "./assets/icon.png",
+        "color": "#3b82f6",
+        "defaultChannel": "default",
+        "channels": [
+          {
+            "name": "General Notifications",
+            "description": "General app notifications",
+            "sound": "default",
+            "priority": "high",
+            "vibrate": true
+          }
+        ]
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-font",
+      "expo-web-browser"
+    ]
+  }
+}

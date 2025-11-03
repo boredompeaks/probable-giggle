@@ -1,0 +1,116 @@
+name: Quick Android Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Choose build type'
+        required: true
+        default: 'preview'
+        type: choice
+        options:
+          - preview
+          - production
+          - development
+      branch:
+        description: 'Branch to build (leave empty for current branch)'
+        required: false
+        type: string
+        default: ''
+      message:
+        description: 'Optional build message/notes'
+        required: false
+        type: string
+
+jobs:
+  build:
+    name: 📱 Build Android APK
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 🚨 Validate EXPO_TOKEN
+      run: |
+        if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
+          echo "❌ Missing EXPO_TOKEN secret"
+          echo "Please set EXPO_TOKEN in repository settings > Secrets and variables"
+          exit 1
+        fi
+        
+    - name: 📱 Checkout code
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.inputs.branch || github.ref }}
+        
+    - name: 🔧 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: ⚡ Install EAS CLI
+      run: |
+        npm install -g @expo/cli eas-cli
+        echo "EAS CLI version: $(eas --version)"
+        
+    - name: 🔐 Authenticate with EAS
+      env:
+        EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      run: |
+        echo "$EXPO_TOKEN" | eas auth:login --token
+        
+    - name: 📱 Start EAS Build
+      id: build
+      env:
+        EAS_BUILD_PROFILE: ${{ github.event.inputs.build_type || 'preview' }}
+        EXPO_EXPERIMENTAL_PATH: ${{ secrets.EXPO_EXPERIMENTAL_PATH || '' }}
+      run: |
+        BUILD_ID=$(eas build --platform android --profile ${{ github.event.inputs.build_type || 'preview' }} --non-interactive --json | jq -r '.id')
+        echo "Build started with ID: $BUILD_ID"
+        echo "build_id=$BUILD_ID" >> $GITHUB_OUTPUT
+        
+        if [ -n "${{ github.event.inputs.message }}" ]; then
+          echo "📝 Build Message: ${{ github.event.inputs.message }}"
+        fi
+        
+    - name: 📋 Build Summary
+      if: always()
+      run: |
+        echo "## 📱 Android APK Build Status" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "| Detail | Value |" >> $GITHUB_STEP_SUMMARY
+        echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+        echo "| Build Type | ${{ github.event.inputs.build_type || 'preview' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Branch | ${{ github.event.inputs.branch || github.ref_name }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Commit | ${{ github.sha }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Project | V5 Chat Vault |" >> $GITHUB_STEP_SUMMARY
+        echo "| EAS Project ID | a302e6c7-9320-4966-ab5b-110c210c81d2 |" >> $GITHUB_STEP_SUMMARY
+        
+        if [ "${{ job.status }}" = "success" ]; then
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🎉 **Build completed successfully!**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📥 **Download your APK:**" >> $GITHUB_STEP_SUMMARY
+          echo "[View in Expo Dashboard](https://expo.dev/projects/a302e6c7-9320-4966-ab5b-110c210c81d2)" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "❌ **Build failed!** Please check the logs above." >> $GITHUB_STEP_SUMMARY
+        fi
+
+  notify:
+    needs: build
+    runs-on: ubuntu-latest
+    if: always() && (github.event.inputs.build_type == 'production' || github.event_name == 'workflow_dispatch')
+    
+    steps:
+    - name: 📱 Notify Build Status
+      run: |
+        if [ "${{ needs.build.result }}" = "success" ]; then
+          echo "✅ Android APK build completed successfully!"
+          echo "🚀 Project: V5 Chat Vault"
+          echo "📱 Platform: Android"
+          echo "🎯 Type: ${{ github.event.inputs.build_type || 'preview' }}"
+          echo "🔗 Download: https://expo.dev/projects/a302e6c7-9320-4966-ab5b-110c210c81d2"
+        else
+          echo "❌ Build failed!"
+          echo "Please check the logs and fix any issues."
+        fi

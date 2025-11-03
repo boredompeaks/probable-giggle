@@ -1,0 +1,146 @@
+name: Build Android APK
+
+on:
+  # Manual triggers
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Build type'
+        required: true
+        default: 'preview'
+        type: choice
+        options:
+          - preview
+          - production
+          - development
+      message:
+        description: 'Build message'
+        required: false
+        type: string
+
+  # Automatic triggers
+  push:
+    branches: [ main, master, develop ]
+    paths:
+      - 'app/**'
+      - 'src/**'
+      - 'components/**'
+      - '*.tsx'
+      - '*.ts'
+      - 'app.json'
+      - 'eas.json'
+      - 'package.json'
+      - 'babel.config.js'
+      - 'metro.config.js'
+      - 'tailwind.config.ts'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'app/**'
+      - 'src/**'
+      - 'components/**'
+      - '*.tsx'
+      - '*.ts'
+      - 'app.json'
+      - 'eas.json'
+      - 'package.json'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Check for EXPO_TOKEN
+      run: |
+        if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
+          echo "❌ Error: EXPO_TOKEN secret is not set"
+          echo "Please set up the EXPO_TOKEN secret in your GitHub repository"
+          exit 1
+        fi
+    
+    - name: 📱 Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: 🔧 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: 📦 Setup EAS CLI
+      run: |
+        npm install -g @expo/cli eas-cli
+        eas --version
+        
+    - name: 📋 Cache npm dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.npm
+          node_modules
+          /home/runner/.npm
+        key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json', '**/package.json') }}
+        restore-keys: |
+          ${{ runner.os }}-npm-
+          
+    - name: 📋 Cache Expo build cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.expo
+          .expo
+          /home/runner/.expo
+        key: ${{ runner.os }}-expo-${{ hashFiles('**/eas.json', '**/app.json') }}
+        restore-keys: |
+          ${{ runner.os }}-expo-
+          
+    - name: 🔐 Setup EAS Authentication
+      run: |
+        echo "${{ secrets.EXPO_TOKEN }}" | eas auth:login
+        
+    - name: 📱 Preview Build
+      if: github.event.inputs.build_type == 'preview' || (github.event.inputs.build_type == '' && github.ref != 'refs/heads/main')
+      env:
+        EAS_BUILD_PROFILE: preview
+        NODE_ENV: production
+      run: |
+        echo "🚀 Starting Preview Build (Android APK)"
+        eas build --platform android --profile preview --non-interactive --no-wait
+        
+    - name: 📱 Production Build
+      if: github.event.inputs.build_type == 'production'
+      env:
+        EAS_BUILD_PROFILE: production
+        NODE_ENV: production
+      run: |
+        echo "🚀 Starting Production Build (Android APK)"
+        eas build --platform android --profile production --non-interactive --no-wait
+        
+    - name: 📱 Development Build
+      if: github.event.inputs.build_type == 'development'
+      env:
+        EAS_BUILD_PROFILE: development
+        NODE_ENV: production
+      run: |
+        echo "🚀 Starting Development Build (Android APK)"
+        eas build --platform android --profile development --non-interactive --no-wait
+        
+    - name: ✅ Build Success
+      if: success()
+      run: |
+        echo "✅ Android APK build completed successfully!"
+        echo "You can check the build status and download the APK at:"
+        echo "https://expo.dev/projects/a302e6c7-9320-4966-ab5b-110c210c81d2"
+        
+    - name: ❌ Build Failure
+      if: failure()
+      run: |
+        echo "❌ Android APK build failed!"
+        echo "Please check the logs above and fix any issues."
+        echo "Common issues:"
+        echo "1. Check that EXPO_TOKEN is set correctly"
+        echo "2. Verify Supabase credentials in eas.json"
+        echo "3. Ensure all dependencies are compatible"
+        echo "4. Check EAS build logs at: https://expo.dev/projects/a302e6c7-9320-4966-ab5b-110c210c81d2"
