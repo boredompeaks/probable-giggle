@@ -52,7 +52,7 @@ jobs:
         
     - name: ⚡ Install EAS CLI
       run: |
-        npm install -g @expo/cli eas-cli
+        npm install -g @expo/cli eas-cli --no-fund --no-audit
         echo "EAS CLI version: $(eas --version)"
         
     - name: 🔐 Authenticate with EAS

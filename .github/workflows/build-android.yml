@@ -74,7 +74,7 @@ jobs:
         
     - name: 📦 Setup EAS CLI
       run: |
-        npm install -g @expo/cli eas-cli
+        npm install -g @expo/cli eas-cli --no-fund --no-audit
         eas --version
         
     - name: 📋 Cache npm dependencies
