@@ -18,7 +18,8 @@
       },
       "env": {
         "EXPO_PUBLIC_SUPABASE_URL": "https://xsirbxbpzxgcanmronoq.supabase.co",
-        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzaXJieGJwenhnY2FubXJvbm9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIwODMxMDAsImV4cCI6MjA3NzY1OTEwMH0.HV7LABfgHax6pxARBRRPTDCFPNS_TYSmzxnZNCXR8EQ"
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzaXJieGJwenhnY2FubXJvbm9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIwODMxMDAsImV4cCI6MjA3NzY1OTEwMH0.HV7LABfgHax6pxARBRRPTDCFPNS_TYSmzxnZNCXR8EQ",
+        "EXPO_TOKEN": "SNP6W7xH0-kC8gvVO6vI7sEnma8xiwUILvnabbW8"
       }
     },
     "preview": {
@@ -34,7 +35,8 @@
       },
       "env": {
         "EXPO_PUBLIC_SUPABASE_URL": "https://xsirbxbpzxgcanmronoq.supabase.co",
-        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzaXJieGJwenhnY2FubXJvbm9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIwODMxMDAsImV4cCI6MjA3NzY1OTEwMH0.HV7LABfgHax6pxARBRRPTDCFPNS_TYSmzxnZNCXR8EQ"
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzaXJieGJwenhnY2FubXJvbm9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIwODMxMDAsImV4cCI6MjA3NzY1OTEwMH0.HV7LABfgHax6pxARBRRPTDCFPNS_TYSmzxnZNCXR8EQ",
+        "EXPO_TOKEN": "SNP6W7xH0-kC8gvVO6vI7sEnma8xiwUILvnabbW8"
       }
     },
     "production": {
@@ -49,7 +51,8 @@
       },
       "env": {
         "EXPO_PUBLIC_SUPABASE_URL": "https://xsirbxbpzxgcanmronoq.supabase.co",
-        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzaXJieGJwenhnY2FubXJvbm9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIwODMxMDAsImV4cCI6MjA3NzY1OTEwMH0.HV7LABfgHax6pxARBRRPTDCFPNS_TYSmzxnZNCXR8EQ"
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzaXJieGJwenhnY2FubXJvbm9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIwODMxMDAsImV4cCI6MjA3NzY1OTEwMH0.HV7LABfgHax6pxARBRRPTDCFPNS_TYSmzxnZNCXR8EQ",
+        "EXPO_TOKEN": "SNP6W7xH0-kC8gvVO6vI7sEnma8xiwUILvnabbW8"
       }
     }
   },
