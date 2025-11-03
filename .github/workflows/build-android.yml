@@ -48,15 +48,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      EXPO_TOKEN: SNP6W7xH0-kC8gvVO6vI7sEnma8xiwUILvnabbW8
     
     steps:
     - name: Check for EXPO_TOKEN
       run: |
-        if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
-          echo "❌ Error: EXPO_TOKEN secret is not set"
-          echo "Please set up the EXPO_TOKEN secret in your GitHub repository"
+        if [ -z "$EXPO_TOKEN" ]; then
+          echo "❌ Error: EXPO_TOKEN environment variable is not set"
+          echo "EXPO_TOKEN should be available from eas.json environment variables"
           exit 1
         fi
+        echo "✅ EXPO_TOKEN found and ready for authentication"
     
     - name: 📱 Checkout repository
       uses: actions/checkout@v4
@@ -98,7 +101,7 @@ jobs:
           
     - name: 🔐 Setup EAS Authentication
       run: |
-        echo "${{ secrets.EXPO_TOKEN }}" | eas auth:login
+        echo "$EXPO_TOKEN" | eas auth:login
         
     - name: 📱 Preview Build
       if: github.event.inputs.build_type == 'preview' || (github.event.inputs.build_type == '' && github.ref != 'refs/heads/main')

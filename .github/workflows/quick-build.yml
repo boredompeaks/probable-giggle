@@ -26,15 +26,18 @@ jobs:
   build:
     name: 📱 Build Android APK
     runs-on: ubuntu-latest
+    env:
+      EXPO_TOKEN: SNP6W7xH0-kC8gvVO6vI7sEnma8xiwUILvnabbW8
     
     steps:
     - name: 🚨 Validate EXPO_TOKEN
       run: |
-        if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
-          echo "❌ Missing EXPO_TOKEN secret"
-          echo "Please set EXPO_TOKEN in repository settings > Secrets and variables"
+        if [ -z "$EXPO_TOKEN" ]; then
+          echo "❌ Missing EXPO_TOKEN environment variable"
+          echo "EXPO_TOKEN should be available from eas.json environment variables"
           exit 1
         fi
+        echo "✅ EXPO_TOKEN environment variable found"
         
     - name: 📱 Checkout code
       uses: actions/checkout@v4
@@ -53,8 +56,6 @@ jobs:
         echo "EAS CLI version: $(eas --version)"
         
     - name: 🔐 Authenticate with EAS
-      env:
-        EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
       run: |
         echo "$EXPO_TOKEN" | eas auth:login --token
         
